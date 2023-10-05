@@ -50,7 +50,7 @@ class Booking(webdriver.Chrome):
         destination_field.clear()
         destination_field.send_keys(destination_name)
         time.sleep(3)
-        first_result = self.find_element(By.CLASS_NAME, 'a80e7dc237')
+        first_result = self.find_element(By.CLASS_NAME, 'a3332d346a')
         first_result.click()
 
     def select_dates(self, check_in_date, check_out_date):
@@ -81,7 +81,7 @@ class Booking(webdriver.Chrome):
             increase_element.click()
 
     def click_search(self):
-        search_element = self.find_element(By.CLASS_NAME, 'aa11d0d5cd')
+        search_element = self.find_element(By.CLASS_NAME, 'd12ff5f5bf')
         search_element.click()
 
     def change_language(self):

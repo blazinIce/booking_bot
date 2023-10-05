@@ -10,5 +10,5 @@ class Bookingfiltration:
         self.driver = driver
 
     def star_filtration(self):
-        star_child_elements = self.driver.find_elements(By.XPATH, "//div[@class='ffb9c3d6a3 c9c3c66a7d f7d4209a37']/div[4]//*[@class='c733693b78']")
+        star_child_elements = self.driver.find_elements(By.XPATH, "//div[@class='ffb9c3d6a3 f85e2160d2'][4]//*[@class='c733693b78']")
         print(len(star_child_elements))
