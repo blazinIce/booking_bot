@@ -31,11 +31,13 @@ class Booking(webdriver.Chrome):
             pass
 
     def bypass_registration_prompt(self):
-        try:
-            close_registration_prompt = self.find_element(By.CLASS_NAME, "f4552b6561")
-            close_registration_prompt.click()
-        except:
-            pass
+
+            try:
+                close_registration_prompt = self.find_element(By.CLASS_NAME, "f4552b6561")
+                if close_registration_prompt:
+                    close_registration_prompt.click()
+            except:
+                pass
 
     def change_currency(self, currency=None):
         currency_element = self.find_element(By.CSS_SELECTOR, 'button[data-testid="header-currency-picker-trigger"]')
@@ -94,6 +96,7 @@ class Booking(webdriver.Chrome):
 
     def apply_filtration(self):
         filtration = Bookingfiltration(driver=self)
-        filtration.star_filtration()
+        filtration.star_filtration(4, 5)
+        filtration.sort_by_lowest_prices_first()
 
 
