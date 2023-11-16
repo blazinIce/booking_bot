@@ -6,6 +6,8 @@ from selenium.webdriver.chrome.options import Options
 from booking.booking_filtration import Bookingfiltration
 from selenium.webdriver.support import expected_conditions as EC
 import booking.constants as const
+from booking.booking_report import BookingReport
+from prettytable import PrettyTable
 import os
 
 
@@ -33,13 +35,12 @@ class Booking(webdriver.Chrome):
             pass
 
     def bypass_registration_prompt(self):
-
-            try:
-                close_registration_prompt = self.find_element(By.CLASS_NAME, "f4552b6561")
-                if close_registration_prompt:
-                    close_registration_prompt.click()
-            except:
-                pass
+        try:
+            close_registration_prompt = self.find_element(By.CLASS_NAME, "f4552b6561")
+            if close_registration_prompt:
+                close_registration_prompt.click()
+        except:
+            pass
 
     def change_currency(self, currency=None):
         currency_element = self.find_element(By.CSS_SELECTOR, 'button[data-testid="header-currency-picker-trigger"]')
@@ -68,14 +69,15 @@ class Booking(webdriver.Chrome):
         occupancy_selection_element.click()
 
         while True:
-            decrease_element = self.find_element(By.XPATH, "//button[@class='a83ed08757 c21c56c305 f38b6daa18 d691166b09 "
-                                                         "ab98298258 deab83296e bb803d8689 e91c91fa93']//span["
-                                                         "@class='fcd9eec8fb bf9a32efa5']//*[name()='svg']//*[name("
-                                                         ")='path' and contains(@d,'M20.25 12.')]")
+            decrease_element = self.find_element(By.XPATH,
+                                                 "//button[@class='a83ed08757 c21c56c305 f38b6daa18 d691166b09 "
+                                                 "ab98298258 deab83296e bb803d8689 e91c91fa93']//span["
+                                                 "@class='fcd9eec8fb bf9a32efa5']//*[name()='svg']//*[name("
+                                                 ")='path' and contains(@d,'M20.25 12.')]")
             decrease_element.click()
-            #If adult value reaches 1, we should break out of the loop
+            # If adult value reaches 1, we should break out of the loop
             adult_count_element = self.find_element(By.CLASS_NAME, 'd723d73d5f')
-            adult_count = adult_count_element.text #get the final adult count
+            adult_count = adult_count_element.text  # get the final adult count
             if int(adult_count) == 1:
                 break
 
@@ -92,13 +94,20 @@ class Booking(webdriver.Chrome):
         """Changes language to english"""
         language_choice_element = self.find_element(By.CLASS_NAME, 'ed3971de08')
         language_choice_element.click()
-        english_element = self.find_element(By.XPATH, "//div[@data-testid='Рекомендовано для вас']//span[@class='cf67405157'][normalize-space()='English (UK)']")
+        english_element = self.find_element(By.XPATH,
+                                            "//div[@data-testid='Рекомендовано для вас']//span[@class='cf67405157'][normalize-space()='English (UK)']")
         english_element.click()
-
 
     def apply_filtration(self):
         filtration = Bookingfiltration(driver=self)
         filtration.star_filtration(4, 5)
         filtration.sort_by_lowest_prices_first()
 
-
+    def return_results(self):
+        hotel_boxes = self.find_elements(By.CLASS_NAME, 'c6710787a4')
+        report = BookingReport(hotel_boxes)
+        table = PrettyTable(
+            field_names=["HOTEL NAME", "HOTEL PRICE"]
+        )
+        table.add_rows(report.pull_deal_box_attributes())
+        print(table)
